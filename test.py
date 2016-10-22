@@ -28,18 +28,35 @@ def post_customer(info):
     return res.json()
 }
 
-final_url = url+uri+key
-req = requests.post(final_url, json=info)
-print req.json()
-print req
-print ''
+def get_id(f_name, l_name):
+    customers = get_customers()
+    id = None
+    for c in customers:
+        if c['first_name'] == f_name and c['last_name'] == l_name:
+            id = c['_id']
+
+    return id
+
 
 def get_customers(ids=None):
+    customers = []
+    uri = '/customers'
 
-req = requests.get(final_url)
-for a in req.json():
-    print "id: {0}\n\tname: {1} {2}".format(a['_id'], a['first_name'], a['last_name'])
+    if ids is None:
+        final_url = url+uri+key
+        req = requests.get(final_url)
+        for a in req.json():
+            print "id: {0}\n\tname: {1} {2}".format(a['_id'], a['first_name'], a['last_name'])
+            customers.add(a)
 
-#print req.json()
-print req
+    else:
+        for id in ids:
+            id_uri = "{0}/{1}".format(uri, str(id))
+            final_url = url+id_uri+key
+            req = requests.get(final_url)
+            for a in req.json():
+                customers.add(a)
+
+    return customers
+
 
