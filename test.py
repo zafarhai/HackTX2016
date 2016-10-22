@@ -2,6 +2,9 @@
 import requests
 import json
 
+from rapidconnect import RapidConnect
+rapid = RapidConnect('hacktx-capitalone', '8c96cca2-e195-415b-b598-d16162d54b05');
+
 import secrets
 
 url = 'http://api.reimaginebanking.com'
@@ -19,7 +22,7 @@ def post_customer(info):
             "street_number": "string2",
             "street_name": "string",
             "city": "string",
-            "state": "TX",
+            "state": "tx",
             "zip": "78705"
             }
         }
@@ -47,7 +50,7 @@ def get_customers(ids=None):
         final_url = url + uri + key
         res = requests.get(final_url)
         for a in res.json():
-            print "id: {0}\n\tname: {1} {2}".format(a['_id'], a['first_name'], a['last_name'])
+            print("id: {0}\n\tname: {1} {2}".format(a['_id'], a['first_name'], a['last_name']))
             customers.add(a)
 
         return customers
@@ -73,7 +76,7 @@ def get_branches(ids=None):
 
         return branches
 
-    for id in ids:
+    for id in ids: 
         id_uri = "{0}/{1}".format(uri, str(id))
         final_url = url + id_uri + key
         res = requests.get(final_url)
@@ -83,10 +86,32 @@ def get_branches(ids=None):
 
         return branches
 
-def get_branches_near_me():
+def get_geo(address):
+    result = rapid.call('GoogleGeocodingAPI', 'addressToCoordinates', {
+        'apiKey': secrets.GOOGLE_KEY,
+        'address': "{0} {1}, {2}, {3} {4}".format(
+            address['street_number'], address['street_name'], address['city'], 
+            address['state'], address['zip'])
+        });
+    print(result)
+
+def get_address(latitude, longitude):
+    result = rapid.call('GoogleGeocodingAPI', 'coordinatesToAddress', { 
+        'apiKey': secrets.GOOGLE_KEY,
+        'latitude': latitude,
+        'longitude': longitude
+    });
+    print(result)
 
 
-
+address = {
+    "street_number": "2624",
+    "street_name": "Whitis Ave",
+    "city": "Austin",
+    "state": "TX",
+    "zip": "78705"
+    }
+get_branch_geo(address)
 
 
 
