@@ -22,6 +22,7 @@ def post_customer(info):
             "state": "TX",
             "zip": "78705"
             }
+        }
     """
     final_url = url + uri + key
     res = requests.post(final_url, json=info)
