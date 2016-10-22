@@ -22,11 +22,12 @@ def post_customer(info):
             "state": "TX",
             "zip": "78705"
             }
+        }
     """
     final_url = url+uri+key
     res = requests.post(final_url, json=info)
     return res.json()
-}
+
 
 def get_id(f_name, l_name):
     customers = get_customers()
