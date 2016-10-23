@@ -11,10 +11,15 @@
 					<h1 id="title" class="text-danger">HackTX</h1>
 				</div>
 				
-				<form class="form-inline" id="loginForm" method="POST" action="/login">
+				<form class="form-inline" id="registerForm" method="POST" action="/register">
 					<div class="form-group col-md-12 col-xs-12">			
 						<input id="fname" type="text" class="form-control" name="firstname" placeholder="Enter first name">
 						<input id="lname" type="text" class="form-control" name="lastname" placeholder="Enter last name">
+						<input id="snum" type="text" class="form-control" name="street_number" placeholder="Enter street number">
+						<input id="sname" type="text" class="form-control" name="street_name" placeholder="Enter street name">
+						<input id="city" type="text" class="form-control" name="city" placeholder="Enter city">
+						<input id="state" type="text" class="form-control" name="state" placeholder="Enter state">
+						<input id="zipcode" type="text" class="form-control" name="zip" placeholder="Enter zipcode">
 						<button class="btn btn-success" type="submit">Login</button>
 					</div>
 				</form>			

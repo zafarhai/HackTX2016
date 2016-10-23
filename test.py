@@ -29,16 +29,17 @@ def post_customer(info):
     """
     final_url = url + uri + key
     res = requests.post(final_url, json=info)
-    return res.json()
+    account = res.json()['objectCreated']
+    return account
 
 
 def get_id(f_name, l_name):
     customers = get_customers()
-    id = None
+    _id = None
     for c in customers:
         if c['first_name'] == f_name and c['last_name'] == l_name:
-            id = c['_id']
-            return id
+            _id = c['_id']
+            return _id
 
     return None 
 
@@ -52,16 +53,18 @@ def get_customers(ids=None):
         res = requests.get(final_url)
         for a in res.json():
             print("id: {0}\n\tname: {1} {2}".format(a['_id'], a['first_name'], a['last_name']))
-            customers.add(a)
+            customers.append(a)
 
         return customers
 
-    for id in ids:
-        id_uri = "{0}/{1}".format(uri, str(id))
+    for _id in ids:
+        print _id
+        id_uri = "{0}/{1}".format(uri, str(_id))
         final_url = url + id_uri + key
         res = requests.get(final_url)
-        for a in res.json():
-            customers.add(a)
+        print 'res'
+        print res.json()
+        customers.append(res.json())
 
         return customers
 
@@ -73,17 +76,17 @@ def get_branches(ids=None):
         final_url = url + uri + key
         res = requests.get(final_url)
         for a in res.json():
-            branches.add(a)
+            branches.append(a)
 
         return branches
 
-    for id in ids: 
-        id_uri = "{0}/{1}".format(uri, str(id))
+    for _id in ids: 
+        id_uri = "{0}/{1}".format(uri, str(_id))
         final_url = url + id_uri + key
         res = requests.get(final_url)
 
         for a in res.json():
-            branches.add(res)
+            branches.append(res)
 
         return branches
 

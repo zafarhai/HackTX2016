@@ -1,13 +1,15 @@
 import requests
 import json
 
+import secrets
 url = 'http://api.reimaginebanking.com'
 key = '?key={}'.format(secrets.API_KEY)
 
-def post_account(account_info): 
-	"""
-  	urj='/customers'
-  	account_info={
+def post_account(customer_id, account_info): 
+	
+    uri='/customers/{0}/accounts'
+    """
+    account_info={
     "_id": "string",
     "type": "Credit Card",
     "nickname": "string",
@@ -17,27 +19,36 @@ def post_account(account_info):
     "customer_id": "string"
   }
   """
-  actual_url=url+urj+key
-  response=requests.post(actual_url, json=account_info)
-  return response.json()
+    actual_url=url+uri+key
+    response=requests.post(actual_url, json=account_info)
+    account = response.json()['objectCreated']
+    print('account')
+    print account
+    return account
 
-def get_account(customer_id=None):
-	accounts = []
+def get_account_by_customer(customer_id=None):
+    accounts = []
     uri = '/accounts'
 
     if customer_id is None:
         actual_url = url+uri+key
         reqeust = requests.get(actual_url)
         for a in request.json():
-            print "id: {0}\n\tname: {1} {2}".format(a['_id'], a['first_name'], a['last_name'])
-            accounts.add(a)
+            accounts.append(a)
 
     else:
-        for id in ids:
-            id_uri = "{0}/{1}".format(uri, str(id))
-            actual_url = url+id_uri+key
-            request = requests.get(actual_url)
-            for a in request.json():
-                accounts.add(a)
+        id_uri = '/customers/{0}/accounts'.format(str(customer_id))
+        actual_url = url+id_uri+key
+        request = requests.get(actual_url)
+        for a in request.json():
+            accounts.append(a)
 
     return accounts
+
+def get_account_by_id(account_id):
+
+    uri = '/accounts/{}'.format(account_id)
+    actual_url = url + uri + key
+    request = requests.get(actual_url)
+
+    return request.json()

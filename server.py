@@ -4,9 +4,9 @@ from flask import session, request, jsonify
 from flask import render_template, url_for, redirect
 app = Flask(__name__)
 
-import test
-import accounts
-import ATM
+from test import *
+from accounts import *
+#import ATM
 
 @app.route("/")
 def hello():
@@ -23,19 +23,21 @@ def login():
     	fname = request.form.get("firstname")
     	lname = request.form.get("lastname")
 
-        id = test.get_id(fname, lname)
-        if id is None:
+        _id = get_id(fname, lname)
+        if _id is None:
             return redirect(url_for('register'))
         else:
-            customer = test.get_customers([id])[0] 
-            return redirect(url_for('customer'), id = customer['_id'])
+            customer = get_customers([_id])[0] 
+            print 'login customer'
+            print customer
+            return redirect(url_for('customer', _id = customer['_id']))
     	print fname
 
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
 
     if request.method == 'GET':
-        render_template('register.html') 
+        return render_template('register.html') 
 
     if request.method == 'POST':
         fname = request.form.get("firstname")
@@ -60,19 +62,47 @@ def register():
             }
 
         customer = post_customer(info) 
+        print(customer)
         
-        return redirect(url_for('customer'), id = customer['_id'])
+        return redirect(url_for('customer', _id = customer['_id']))
 
-@app.route("/customer/{id}")
-def customer():
+@app.route("/customer/<_id>")
+def customer(_id):
      
     if request.method == 'GET':
-        customer = test.get_customers([id])[0] 
-        accounts = get_account(customer['_id']) 
+        print _id
+        customer = get_customers([_id])[0] 
+        print 'customer'
+        print customer
+        accounts = get_account_by_customer(customer['_id']) 
 
-        #return render_template('
+        return render_template('customer.html', customer = customer, accounts = accounts)
 
+    if request.method == 'POST':
+        account_type = request.form.get("account_type")
+        nickname = request.form.get("nickname")
+        rewards = request.form.get("rewards")
+        balance = request.form.get("balance")
+        account_number = request.form.get("account_no")
 
+  	account_info={
+            "type": account_type,
+            "nickname": nickname,
+            "rewards": rewards,
+            "balance": balance,
+            "account_number": account_number,
+          }
+
+        account = post_account(_id, account_info) 
+
+        return redirect(url_for('customer', _id=_id))
+
+@app.route("/accounts/<_id>")
+def account(_id):
+
+    if request.method == 'GET':
+        account = get_account_by_id(_id)
+        return render_template('account.html', account = account)
 
 
 if __name__ == "__main__":
