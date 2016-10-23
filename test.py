@@ -103,6 +103,9 @@ def get_address(latitude, longitude):
     });
     print(result)
 
+def get_branches_near_loc(latitude, longitude):
+    pass
+
 
 address = {
     "street_number": "2624",
@@ -111,6 +114,7 @@ address = {
     "state": "TX",
     "zip": "78705"
     }
+
 get_branch_geo(address)
 
 
