@@ -15,21 +15,21 @@ def hello():
 @app.route("/login", methods=['GET','POST'])
 def login():
     
-    if request.method == 'GET':
-	return render_template('login.html')
+	if request.method == 'GET':
+		return render_template('login.html')
 
-    if request.method == 'POST':
+	if request.method == 'POST':
 
-    	fname = request.form.get("firstname")
-    	lname = request.form.get("lastname")
+		fname = request.form.get("firstname")
+		lname = request.form.get("lastname")
 
-        id = test.get_id(fname, lname)
-        if id is None:
-            return redirect(url_for('register'))
-        else:
-            customer = test.get_customers([id])[0] 
-            return redirect(url_for('customer'), id = customer['_id'])
-    	print fname
+		id = test.get_id(fname, lname)
+		if id is None:
+			return redirect(url_for('register'))
+		else:
+			customer = test.get_customers([id])[0] 
+			return redirect(url_for('customer'), id = customer['_id'])
+		print (fname)
 
 @app.route("/register")
 def register():
