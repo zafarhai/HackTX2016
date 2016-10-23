@@ -7,7 +7,9 @@ key = '?key={}'.format(secrets.API_KEY)
 
 def post_account(customer_id, account_info): 
 	
-    uri='/customers/{0}/accounts'
+    uri='/customers/{0}/accounts'.format(customer_id)
+    print uri
+    print account_info
     """
     account_info={
     "_id": "string",
@@ -21,6 +23,8 @@ def post_account(customer_id, account_info):
   """
     actual_url=url+uri+key
     response=requests.post(actual_url, json=account_info)
+    print('account response')
+    print response.json()
     account = response.json()['objectCreated']
     print('account')
     print account

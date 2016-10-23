@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 from test import *
 from accounts import *
-#import ATM
+from ATM import *
 
 @app.route("/")
 def hello():
@@ -23,6 +23,9 @@ def login():
     	fname = request.form.get("firstname")
     	lname = request.form.get("lastname")
 
+        lat = request.form.get("lat")
+        lng = request.form.get("lng")
+
         _id = get_id(fname, lname)
         if _id is None:
             return redirect(url_for('register'))
@@ -30,8 +33,7 @@ def login():
             customer = get_customers([_id])[0] 
             print 'login customer'
             print customer
-            return redirect(url_for('customer', _id = customer['_id']))
-    	print fname
+            return redirect(url_for('customer', _id = customer['_id'], lat=lat, lng=lng))
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -47,6 +49,9 @@ def register():
         city = request.form.get("city")
         state = request.form.get("state")
         zipcode = request.form.get("zip")
+
+        lat = request.form.get("lat")
+        lng = request.form.get("lng")
 
         address = {
             "street_number": street_number,
@@ -64,10 +69,10 @@ def register():
         customer = post_customer(info) 
         print(customer)
         
-        return redirect(url_for('customer', _id = customer['_id']))
+        return redirect(url_for('customer', _id = customer['_id'], lat=lat, lng=lng))
 
-@app.route("/customer/<_id>")
-def customer(_id):
+@app.route("/customer/<_id>/lat<lat>lng<lng>", methods=['GET', 'POST'])
+def customer(_id, lat, lng):
      
     if request.method == 'GET':
         print _id
@@ -76,26 +81,41 @@ def customer(_id):
         print customer
         accounts = get_account_by_customer(customer['_id']) 
 
+        print 'geo'
+        print lat
+        print lng
+
+        atm_info = {
+                'lat': lat,
+                'lng': lng,
+                'rad': 10}
+        atms = get_ATM(atm_info) 
+        print 'atms'
+        print atms
+
         return render_template('customer.html', customer = customer, accounts = accounts)
 
     if request.method == 'POST':
         account_type = request.form.get("account_type")
         nickname = request.form.get("nickname")
         rewards = request.form.get("rewards")
-        balance = request.form.get("balance")
-        account_number = request.form.get("account_no")
+        balance = float(request.form.get("balance"))
+        account_number = request.form.get("account_number")
+
+        lat = request.form.get("lat")
+        lng = request.form.get("lng")
 
   	account_info={
             "type": account_type,
             "nickname": nickname,
-            "rewards": rewards,
+            "rewards": 0,
             "balance": balance,
             "account_number": account_number,
           }
 
         account = post_account(_id, account_info) 
 
-        return redirect(url_for('customer', _id=_id))
+        return redirect(url_for('customer', _id=_id, lat=lat, lng=lng))
 
 @app.route("/accounts/<_id>")
 def account(_id):
