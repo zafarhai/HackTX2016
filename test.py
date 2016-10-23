@@ -38,8 +38,9 @@ def get_id(f_name, l_name):
     for c in customers:
         if c['first_name'] == f_name and c['last_name'] == l_name:
             id = c['_id']
+            return id
 
-    return id
+    return None 
 
 
 def get_customers(ids=None):
@@ -103,7 +104,7 @@ def get_address(latitude, longitude):
     });
     print(result)
 
-
+"""
 address = {
     "street_number": "2624",
     "street_name": "Whitis Ave",
@@ -112,6 +113,7 @@ address = {
     "zip": "78705"
     }
 get_branch_geo(address)
+"""
 
 
 
